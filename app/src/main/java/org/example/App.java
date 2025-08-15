@@ -21,13 +21,17 @@ public class App {
     public static void main(String[] args) throws IOException, InterruptedException, URISyntaxException {
         Scanner leitor = new Scanner(System.in);
         System.out.print("Digite um ip: ");
-        String ip = leitor.nextLine();
+        String URI = leitor.nextLine();
 
         HttpClient cliente = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder(new URI(ip)).GET().build();
+        HttpRequest request = HttpRequest.newBuilder(new URI(URI)).GET().build();
         HttpResponse<String> response = cliente.send(request, BodyHandlers.ofString());
+        
+        
+        
         System.out.printf("Status: %d\n", response.statusCode());
-        System.out.printf("Corpo: %s\n", response.body());
+        System.out.printf("Corpo:\n %s\n", response.body());
+        leitor.close();
 
     }
 }
