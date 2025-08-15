@@ -4,36 +4,30 @@
 package org.example;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.util.Scanner;
 
-import org.example.HTTP.Cliente;
 
 public class App {
     public String getGreeting() {
         return "Hello World!";
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException, URISyntaxException {
         Scanner leitor = new Scanner(System.in);
         System.out.print("Digite um ip: ");
-        String ip = leitor.next();
-        System.out.println(ip);
+        String ip = leitor.nextLine();
 
-        Cliente clienteHTTP = new Cliente(ip, 0);
+        HttpClient cliente = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder(new URI(ip)).GET().build();
+        HttpResponse<String> response = cliente.send(request, BodyHandlers.ofString());
+        System.out.printf("Status: %d\n", response.statusCode());
+        System.out.printf("Corpo: %s\n", response.body());
 
-        boolean running = true;
-        System.out.println("Digite uma mensagem: ");
-
-        while (running) {
-            String mensagem = leitor.next();
-            String resposta = clienteHTTP.envia(mensagem);
-            if (!resposta.contains("status 3")) {
-                running = false;
-            }
-            System.out.println("Digite uma mensagem: ");
-            running = false;
-
-        }
-        leitor.close();
     }
 }
